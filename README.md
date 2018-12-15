@@ -6,8 +6,7 @@ vcan_macOS
 Overview
 
 ## Description
-
-## Demo
+"vcan_macOS" is virtual CAN interface on macOS. The interface is implemented using Kernel EXTension (kext).
 
 ## Requirement
 
