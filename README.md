@@ -18,4 +18,4 @@ Overview
 
 ## Author
 
-[tcnksm](https://github.com/ohirangosta)
+[ohirangosta](https://github.com/ohirangosta)
