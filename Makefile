@@ -1,4 +1,4 @@
-CC ?= clang
+CC := /usr/bin/clang
 CFLAGS := -std=c11 -Wall -Wextra -Werror -O2 -Iinclude
 BUILD := build
 

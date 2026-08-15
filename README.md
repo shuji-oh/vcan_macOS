@@ -9,8 +9,6 @@ It is deliberately **not** a kernel extension and does not create an
 BSD socket domain (`PF_CAN`) or CAN network-interface type; see
 [DESIGN.md](DESIGN.md).
 
-<img src="https://user-images.githubusercontent.com/27995559/50041683-d5e50e00-009b-11e9-8f41-d0c049aa37dd.png" width="160px">
-
 ## Included behavior
 
 * `vcan0` local bus served by `macos-vcand`.

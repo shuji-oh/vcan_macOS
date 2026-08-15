@@ -22,7 +22,7 @@ struct macos_vcan {
 static int valid_frame(const struct macos_canfd_frame *frame)
 {
     uint32_t id_mask = (frame->can_id & MACOS_CAN_EFF_FLAG) ? MACOS_CAN_EFF_MASK : MACOS_CAN_SFF_MASK;
-    return frame->len <= sizeof(frame->data) &&
+    return (frame->can_id & MACOS_CAN_ERR_FLAG) == 0 && frame->len <= sizeof(frame->data) &&
         (frame->can_id & ~(MACOS_CAN_EFF_FLAG | MACOS_CAN_RTR_FLAG | MACOS_CAN_ERR_FLAG | id_mask)) == 0;
 }
 

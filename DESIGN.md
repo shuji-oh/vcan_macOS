@@ -27,6 +27,11 @@ general BSD socket-domain registration API.  A true
 custom XNU build or unsupported private interfaces; this project intentionally
 does neither.
 
+Apple's current installation requirements for KEXTs include explicit user
+approval and a reboot; Apple silicon additionally requires Reduced Security and
+permission for third-party KEXTs.  This is materially broader than the local
+development use case here.  References: [Apple's KEXT installation guide](https://developer.apple.com/documentation/apple-silicon/installing-a-custom-kernel-extension), [System Extensions overview](https://developer.apple.com/documentation/systemextensions), and [XNU's private domain registration implementation](https://github.com/apple-oss-distributions/xnu/blob/main/bsd/kern/uipc_domain.c).
+
 For physical CAN hardware, use an appropriately supported driver path and
 bridge frames in user space.  Do not use this virtual service to control
 safety-critical equipment without a separately reviewed transport, access

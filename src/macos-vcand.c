@@ -24,7 +24,7 @@ static void stop(int signo) { (void)signo; stopping = 1; }
 static int valid_frame(const struct macos_canfd_frame *frame)
 {
     uint32_t id_mask = (frame->can_id & MACOS_CAN_EFF_FLAG) ? MACOS_CAN_EFF_MASK : MACOS_CAN_SFF_MASK;
-    return frame->len <= sizeof(frame->data) &&
+    return (frame->can_id & MACOS_CAN_ERR_FLAG) == 0 && frame->len <= sizeof(frame->data) &&
         (frame->can_id & ~(MACOS_CAN_EFF_FLAG | MACOS_CAN_RTR_FLAG | MACOS_CAN_ERR_FLAG | id_mask)) == 0;
 }
 static int same_peer(const struct sockaddr_un *a, const struct sockaddr_un *b)
@@ -57,6 +57,7 @@ int main(int argc, char **argv)
     struct client clients[MAX_CLIENTS];
     size_t client_count = 0;
     int fd, opt = 1;
+    struct sigaction action = {0};
     if (argc == 3 && strcmp(argv[1], "--socket-dir") == 0) dir = argv[2];
     else if (argc != 1) { fprintf(stderr, "usage: %s [--socket-dir directory]\n", argv[0]); return EX_USAGE; }
     if (snprintf(path, sizeof(path), "%s/vcan0.sock", dir) >= (int)sizeof(path)) {
@@ -73,7 +74,11 @@ int main(int argc, char **argv)
     if (bind(fd, (const struct sockaddr *)&server, sizeof(server)) != 0) { perror("bind"); close(fd); return EX_CANTCREAT; }
     if (chmod(path, 0666) != 0) { perror("chmod socket"); unlink(path); close(fd); return EX_CANTCREAT; }
     socket_path = path;
-    signal(SIGINT, stop); signal(SIGTERM, stop);
+    action.sa_handler = stop;
+    sigemptyset(&action.sa_mask);
+    action.sa_flags = 0; /* recvfrom(2) must return EINTR so shutdown is prompt. */
+    (void)sigaction(SIGINT, &action, NULL);
+    (void)sigaction(SIGTERM, &action, NULL);
     while (!stopping) {
         struct macos_vcan_wire wire;
         socklen_t peer_len = sizeof(peer);
